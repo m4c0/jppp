@@ -43,11 +43,22 @@ int main() {
       put("package ");
       put(l);
       putln(';');
+      putln();
       first = false;
     } else {
       put("import ");
       put(t);
       putln(';');
+    }
+  }
+  putln();
+
+  for (auto t : tokens) {
+    auto [l,r] = t.rsplit('.');
+    if (l.size() == 0) {
+      put(t);
+    } else {
+      put(r);
     }
   }
 }
