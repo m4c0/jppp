@@ -35,7 +35,19 @@ int main() {
   auto src = jojo::read_cstr("Example.java");
   auto tokens = split_tokens(src);
 
+  bool first = true;
   for (auto t : tokens) {
-    putln(t);
+    auto [l,r] = t.rsplit('.');
+    if (l.size() == 0) continue;
+    if (first) {
+      put("package ");
+      put(l);
+      putln(';');
+      first = false;
+    } else {
+      put("import ");
+      put(t);
+      putln(';');
+    }
   }
 }
