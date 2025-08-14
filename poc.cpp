@@ -1,9 +1,9 @@
 #pragma leco tool
 
-import jojo;
 import jute;
 import hai;
 import hashley;
+import popen;
 import print;
 
 static auto next_idx(jute::view src) {
@@ -32,14 +32,27 @@ static auto split_tokens(jute::view src) {
   return tokens;
 }
 
-int main() {
-  auto src = jojo::read_cstr("/dev/stdin");
-  auto tokens = split_tokens(src);
+int main(int argc, char ** argv) try {
+  if (argc != 2) die("expecting a single javap argument");
+
+  jute::heap buffer {};
+
+  p::proc javap { "javap", argv[1] };
+  bool first = true;
+  while (javap.gets()) {
+    if (first) {
+      first = false;
+      continue;
+    }
+    buffer = buffer + jute::view::unsafe(javap.last_line_read()) + "\n";
+  }
+
+  auto tokens = split_tokens(*buffer);
 
   hashley::niamh dedup { 127 };
   hai::varray<jute::view> imports { 10240 };
 
-  bool first = true;
+  first = true;
   for (auto t : tokens) {
     auto [l,r] = t.rsplit('.');
     if (l.size() == 0) continue;
@@ -81,4 +94,6 @@ int main() {
       put(r);
     }
   }
+} catch (...) {
+  return 1;
 }
