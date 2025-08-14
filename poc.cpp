@@ -33,7 +33,7 @@ static auto split_tokens(jute::view src) {
 }
 
 int main() {
-  auto src = jojo::read_cstr("Example.java");
+  auto src = jojo::read_cstr("/dev/stdin");
   auto tokens = split_tokens(src);
 
   hashley::niamh dedup { 127 };
@@ -50,6 +50,8 @@ int main() {
       putln();
       first = false;
     } else {
+      if (t.starts_with("java.lang.")) continue;
+
       auto & d = dedup[t];
       if (d) continue;
       d = 1;
