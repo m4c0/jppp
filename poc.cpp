@@ -3,6 +3,7 @@
 import jojo;
 import jute;
 import hai;
+import hashley;
 import print;
 
 static auto next_idx(jute::view src) {
@@ -35,6 +36,8 @@ int main() {
   auto src = jojo::read_cstr("Example.java");
   auto tokens = split_tokens(src);
 
+  hashley::niamh dedup { 127 };
+
   bool first = true;
   for (auto t : tokens) {
     auto [l,r] = t.rsplit('.');
@@ -46,6 +49,10 @@ int main() {
       putln();
       first = false;
     } else {
+      auto & d = dedup[t];
+      if (d) continue;
+      d = 1;
+
       put("import ");
       put(t);
       putln(';');
