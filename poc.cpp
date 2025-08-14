@@ -37,6 +37,7 @@ int main() {
   auto tokens = split_tokens(src);
 
   hashley::niamh dedup { 127 };
+  hai::varray<jute::view> imports { 10240 };
 
   bool first = true;
   for (auto t : tokens) {
@@ -53,11 +54,21 @@ int main() {
       if (d) continue;
       d = 1;
 
-      put("import ");
-      put(t);
-      putln(';');
+      imports.push_back_doubling(t);
     }
   }
+  for (auto i = 0; i < imports.size(); i++) {
+    auto & ii = imports[i];
+    for (auto j = i + 1; j < imports.size(); j++) {
+      auto & jj = imports[j];
+      if (ii < jj) continue;
+      auto tmp = ii;
+      ii = jj;
+      jj = tmp;
+    }
+  }
+
+  for (auto i : imports) putln("import ", i, ";");
   putln();
 
   for (auto t : tokens) {
