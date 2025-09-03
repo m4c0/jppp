@@ -19,6 +19,8 @@ static auto next_idx(jute::view src) {
     break;
   }
 
+  if (src.subview(i).before.ends_with("...")) i -= 3;
+
   return i;
 }
 
